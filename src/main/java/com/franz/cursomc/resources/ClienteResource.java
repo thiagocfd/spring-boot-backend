@@ -1,13 +1,17 @@
 package com.franz.cursomc.resources;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.franz.cursomc.domain.Categoria;
 import com.franz.cursomc.domain.Cliente;
+import com.franz.cursomc.dto.CategoriaDTO;
 import com.franz.cursomc.dto.ClienteDTO;
+import com.franz.cursomc.dto.ClienteNewDTO;
 import com.franz.cursomc.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.franz.cursomc.domain.Cliente;
 import com.franz.cursomc.services.ClienteService;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 
@@ -30,6 +35,15 @@ public class ClienteResource {
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
+	}
+
+	@RequestMapping(method=RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
+		Cliente obj = service.fromDTO(objDto);
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("{/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
