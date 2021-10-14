@@ -1,5 +1,6 @@
 package com.franz.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -41,6 +42,10 @@ public class CategoriaService {
 		catch(DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException("Não é possível escolher uma categoria que possui produtos");
 		}
+	}
+
+	public List<Categoria> findAll() {
+		return repo.findAll();
 	}
 	
 }
